@@ -3,10 +3,26 @@ title: "Data connections"
 description: "Connecting your claims system, and uploading member and claim files."
 ---
 
-Open **Data & Connectors → Connectors**. There are two ways in: a **CMS connector** that
-reads your claims system, and **Batch Dump** for files.
+Open **Data & Connectors**. **Data Sources** holds your knowledge library; **Connectors**
+brings in your claims and members.
 
-## CMS connectors
+## Data sources
+
+<Frame>
+  <img src="/images/portal-data-sources.webp" alt="Data Sources: open Gooclaim Sources to connect document libraries such as SharePoint, Google Drive or Confluence" />
+</Frame>
+
+**Open Gooclaim Sources** opens a separate app, in a new tab, where you connect your document
+libraries — for example SharePoint, Google Drive or Confluence — and upload files. They become
+your knowledge library: Orion searches it when your staff ask a question, and cites the
+passage it used.
+
+## Connectors
+
+Under **Connectors** there are two ways in: a **CMS connector** that reads your claims
+system, and **Batch Dump** for files.
+
+### CMS connectors
 
 The list shows each connector, its field mapping (**Draft**, **Active** or **Paused**), its
 health and its last successful fetch.
@@ -36,7 +52,7 @@ not fit the mapping is never guessed at: it is stopped and reported.
 
 <Note>To change a connector's address or credentials, contact your Gooclaim onboarding contact.</Note>
 
-## Batch Dump (files)
+### Batch Dump (files)
 
 Send member and claim files by SFTP, or upload them by hand.
 
