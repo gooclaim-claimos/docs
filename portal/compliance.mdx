@@ -21,6 +21,14 @@ Do not put names or health details in it.
 
 A member can ask for their data to be erased:
 
+```mermaid
+flowchart LR
+    A[Erasure request] --> B{DPO decides}
+    B -- Reject --> R[Closed, with the reason]
+    B -- Approve --> C[A different person erases it]
+    C --> D[Member is told their data was erased]
+```
+
 1. Your Data Protection Officer **approves** or **rejects** the request, with a reason.
    Approving deletes nothing yet.
 2. A different person then **erases** it, after typing the request number. This cannot be

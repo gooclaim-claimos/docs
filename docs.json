@@ -37,6 +37,14 @@
               "portal/compliance",
               "portal/organisation"
             ]
+          },
+          {
+            "group": "Orion guide",
+            "pages": [
+              "orion/overview",
+              "orion/claim-room",
+              "orion/coworker"
+            ]
           }
         ]
       }

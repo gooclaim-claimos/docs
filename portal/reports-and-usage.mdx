@@ -20,6 +20,16 @@ many needed a person, broken down by workflow with the average time.
 
 ### Document requests
 
+```mermaid
+flowchart LR
+    A[Documents asked for] --> B[Member opens the secure link]
+    B --> C[Enters the one-time code]
+    C --> D[Sends the files]
+    D --> E[Files are scanned and checked]
+    E --> F[Accepted]
+    E --> G[Held or refused]
+```
+
 When a claim waits on documents, members get a secure upload link. The funnel follows those
 requests — asked, opened, sent a file, completed — and shows where members stopped: never
 opened the link, could not pass the code, opened but sent nothing, still owe more files, or

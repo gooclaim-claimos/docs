@@ -22,6 +22,14 @@ health and its last successful fetch.
 3. **Submit.** Your credentials are saved and your sample goes to the Gooclaim onboarding
    team, who build and test the field mapping.
 
+```mermaid
+flowchart LR
+    A[You: connect and send a sample] --> B[Gooclaim builds the field mapping]
+    B --> C[Mapping tested]
+    C --> D[Gooclaim activates it]
+    D --> E[Claims are read]
+```
+
 The connector stays in **Draft** until Gooclaim activates its mapping. A record that does
 not fit the mapping is never guessed at: it is stopped and reported.
 

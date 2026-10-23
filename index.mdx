@@ -31,6 +31,23 @@ Members write in on **WhatsApp** or **Email**. Replies go out in **English, Hind
 Hinglish**. A member who writes in another Indian language is told, in their own script,
 that help in that language is not available yet.
 
+## What happens when a member writes in
+
+```mermaid
+flowchart TD
+    A[Member writes in on WhatsApp or Email] --> B{Consent given?}
+    B -- No --> C[Ask for consent]
+    B -- Yes --> D[Recognise the member from your records]
+    D --> E{Private detail needed?}
+    E -- Yes --> F[One-time code to the mobile on your records]
+    E -- No --> G[Read your claim record]
+    F --> G
+    G --> H[Fill an approved template]
+    H --> I{Matches your claim record?}
+    I -- Yes --> J[Reply sent]
+    I -- No --> K[Holding reply instead]
+```
+
 ## What keeps it safe
 
 - **Consent first.** Before anything else, a member is asked for consent to process their
@@ -53,7 +70,7 @@ that help in that language is not available yet.
     For your administrators: your team and access, channels, message templates, data
     connections, reports, usage and compliance.
   </Card>
-  <Card title="Orion" icon="user-tie">
+  <Card title="Orion" icon="user-tie" href="/orion/overview">
     For your claims staff: an AI claims coworker that reads the claim, prepares the next
     step with the evidence, and waits for a person to approve it.
   </Card>
