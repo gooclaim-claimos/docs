@@ -24,6 +24,19 @@
               "getting-started",
               "glossary"
             ]
+          },
+          {
+            "group": "Portal guide",
+            "pages": [
+              "portal/overview",
+              "portal/team-and-access",
+              "portal/channels",
+              "portal/data-connections",
+              "portal/templates",
+              "portal/reports-and-usage",
+              "portal/compliance",
+              "portal/organisation"
+            ]
           }
         ]
       }

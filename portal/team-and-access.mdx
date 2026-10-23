@@ -1,0 +1,82 @@
+---
+title: "Team and access"
+description: "Inviting your team, roles, access reviews, Gooclaim support access, single sign-on and the sign-in IP list."
+---
+
+All of this is under **Organisation → Members & Roles** and **Organisation → Security**.
+
+## Members
+
+The **Members** tab lists everyone in your organisation, with their roles and whether
+two-step verification is on.
+
+- **Edit roles** changes a person's roles.
+- **Unlock** lets a person back in after too many failed sign-ins.
+- If only one person holds the Tenant Admin role, Portal suggests giving it to a second
+  trusted person.
+
+## Invitations
+
+**Invite member** sends an email invitation with a role (Viewer unless you choose
+another). Pending invitations can be resent or revoked; expired ones can be sent again.
+
+## Roles
+
+The **Roles & Permissions** tab lists the built-in and custom roles. **Create custom role**
+makes a new role from the permissions you tick.
+
+## Access reviews
+
+Portal schedules two reviews: **admin rights every 3 months** and **everyone every 6
+months**.
+
+1. Start a review.
+2. For each person, choose **Keep** or **Remove**. Removing suspends and signs them out at
+   once.
+3. **Complete the review** once every line is decided.
+
+Nobody decides their own line. A finished review can be downloaded as CSV or printed.
+
+## Access history
+
+A read-only record of role changes, invitations, sign-in IP list changes, lockouts, access
+reviews and any Gooclaim access to your account.
+
+## Gooclaim support access
+
+Gooclaim has no standing access to your organisation. If Gooclaim support needs to look at
+your account, they ask first:
+
+- Your Tenant Admin or DPO approves the request for a set time, or refuses it.
+- A request that includes claims and member data can only be approved by your DPO.
+- Access is read-only and ends by itself. You can stop it at any time with **Stop now**.
+- While access is open, an amber bar at the top of Portal says who can see your account and
+  until when.
+
+In an emergency, Gooclaim may open read-only access without asking first; you are emailed
+at once, and it appears in your access history.
+
+## Single sign-on
+
+Under **Organisation → Security**, your administrator can let your team sign in with
+**Microsoft** (Entra ID / Office 365) or **Google Workspace**:
+
+1. Choose your company login, and whether a first-time user joins as a Viewer or is refused
+   unless invited.
+2. Add your email domains and prove you own them with a DNS TXT record.
+3. For Microsoft, approve the Gooclaim app in Microsoft.
+4. Test sign-in with your own account.
+5. Switch single sign-on on.
+
+You can also map Microsoft groups to Gooclaim roles. With **SSO only**, passwords stop
+working for everyone except one or two break-glass Tenant Admins you choose.
+
+Someone you disable at your company loses access to Gooclaim within 12 hours.
+
+## Sign-in IP list
+
+Limit sign-in to the addresses and ranges you list (IPv4 and IPv6). Your own current
+address must stay on the list, so you cannot lock yourself out. Every change shows in your
+access history.
+
+<Note>Only your own administrators can change single sign-on and the IP list — Gooclaim cannot.</Note>
