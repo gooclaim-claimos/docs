@@ -1,0 +1,35 @@
+---
+title: "Documents back to you"
+description: "How documents members send through the secure upload link can be placed in a folder on your SFTP server."
+---
+
+Members send documents through a secure upload link. Every file is scanned and checked
+before it is accepted, and accepted documents are always visible to your staff in Orion.
+
+If you receive claim files by SFTP, Gooclaim OS can also **place each accepted document in a
+folder on your server**. Tell the Gooclaim team the folder to use; it must already exist.
+
+## Where documents land
+
+```text
+{documents folder}/
+└── {claim number}/
+    ├── discharge_summary_3f9a1c2b.pdf
+    └── discharge_summary_3f9a1c2b.json
+```
+
+- One subfolder per claim, created when needed.
+- The file is named by document type and a short reference — never the member's own file
+  name. Files are PDF, JPEG or PNG; photos taken as HEIC arrive as JPEG.
+- Next to each document is a `.json` file: a FHIR R4 **DocumentReference** with the document
+  type (and its NHCX code where there is one), the claim number, the file's type and size,
+  its SHA-1 and SHA-256 hashes, and the date it was accepted.
+- Each file is written under a temporary name and renamed when complete, so you never see a
+  half-written file. The document arrives before its `.json`.
+
+## If a document cannot be placed
+
+Gooclaim OS keeps trying — every 2 minutes at first, then less often, up to once an hour —
+for 72 hours. If the folder has been removed or the SFTP connection is no longer set up, it
+stops at once. If it still cannot place the document, the Gooclaim team is alerted and the
+document stays available in Orion.

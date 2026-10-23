@@ -1,0 +1,120 @@
+---
+title: "Files and SFTP"
+description: "Sending member, claim and claim-document files: SFTP folders, pickup rules, file format, validation and the fields each file needs."
+---
+
+Send three kinds of file — **members**, **claims** and **claim documents** — by SFTP, or
+upload them in Portal under **Data & Connectors → Connectors → Batch Dump**.
+
+## On your SFTP server
+
+Gooclaim OS looks in three folders under the base path you give us:
+
+```text
+{base path}/
+├── members/
+├── claims/
+└── claim_documents/
+```
+
+- **Every hour**, Gooclaim OS checks each folder for files.
+- It takes every file directly in the folder (not in subfolders), whatever its name, **if the
+  file was modified in the last 2 hours**. A file copied with an old preserved timestamp is
+  not picked up.
+- Files whose name starts with a dot are skipped. Upload as `.name.csv` and rename when the
+  upload is complete, so a half-written file is never read.
+- Gooclaim OS only reads: your files are never moved, changed or deleted.
+- Before the first read you approve your server's identity in Portal — see
+  [server identity](#server-identity).
+
+## File format
+
+| | By SFTP | Uploaded in Portal |
+|---|---|---|
+| Formats | CSV | CSV or Excel (`.xlsx`) |
+| Encoding | UTF-8 (a byte-order mark is fine) | — |
+| Header row | Required | Required |
+| Limit | 20,000 rows per file | 20,000 rows, 25 MB |
+
+For Excel files: only the first sheet is read (another sheet with data rejects the file),
+merged cells are refused, and very long numbers shown in scientific notation are excluded
+from the row.
+
+## What happens to a file
+
+- **The same file twice is processed once.** A file is recognised by its exact contents; if
+  the contents change, it is processed again.
+- **An older record never overwrites a newer one.** Each row carries the time it was last
+  changed on your side; a row no newer than what is stored is skipped.
+- **A bad row does not stop the file.** It is set aside with its row number, the field and
+  the reason (never the value), and the other rows go in.
+- **A whole file is rejected** if it is not valid UTF-8, has no header row, is over the row
+  limit, or has no active field mapping yet. Portal shows why.
+- Members whose cover ended more than 90 days ago are not stored.
+
+Portal shows each file's result: Synced, Mapped nothing to store, Rejected, Store failed or
+Processing failed.
+
+## Members file
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Member ID | Yes | Your member identifier |
+| Relationship | Yes | self, spouse, child, parent, common, other or injured |
+| Name | Yes | |
+| Last changed | Yes | When this row last changed on your side |
+| Primary member ID | No | The policyholder, for family members |
+| Status | No | active (default), cancelled, draft or entered-in-error |
+| Date of birth | No | Used only to check identity |
+| Cover start and end dates | No | |
+| Policy number, employee ID, group code, TPA ID, ABHA | No | |
+| Registered mobile and email | No | How the member is recognised on WhatsApp and Email |
+
+## Claims file
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Claim number | Yes | |
+| Status | Yes | APPROVED, REJECTED, PENDING, UNDER_REVIEW or NOT_FOUND |
+| Received time | Yes | When the claim reached you — this starts the IRDAI turnaround clock |
+| Last changed | Yes | |
+| Member ID | No | Links the claim to the member |
+| Claim type | No | CASHLESS_PREAUTH, CASHLESS_DISCHARGE or REIMBURSEMENT |
+| Hospital | No | |
+| Admission and discharge dates | No | |
+| Decided time | No | |
+| Rejection reason and query reason | No | A code and/or text |
+| Amounts claimed and approved | No | In rupees or paise; never negative |
+
+## Claim documents file
+
+One row per document a claim needs.
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Claim number | Yes | |
+| Document type | Yes | See below |
+| State | Yes | REQUIRED, RECEIVED, VERIFIED or REJECTED |
+| Last changed | Yes | |
+| Your document reference | No | |
+| Received time | No | |
+| Rejection note | No | Up to 2,000 characters |
+
+### Document types
+
+claim_form, discharge_summary, death_summary, final_bill, interim_bill, estimate_bill,
+payment_receipt, prescription, investigation_report, lab_report, radiology_report,
+medical_certificate, referral_letter, preauth_approval_letter, implant_invoice, fir_copy,
+medico_legal_certificate, declaration_form, id_proof, address_proof, pan_card,
+cancelled_cheque, policy_copy, death_certificate.
+
+Case and separators do not matter. Any other name is kept as your own document type.
+
+## Server identity
+
+Before anything is read from — or written to — your SFTP server, your administrator checks
+its fingerprint in Portal (in the `SHA256:…` form `ssh-keygen -lf` shows) and approves it.
+If the server's key ever changes, Gooclaim OS stops until the new identity is approved.
+
+Gooclaim OS can sign in to your server with an SSH key (Ed25519, ECDSA or RSA, with or
+without a passphrase) or a password.

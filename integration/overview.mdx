@@ -1,0 +1,28 @@
+---
+title: "Integration overview"
+description: "For your IT team: how your claims and member data reach Gooclaim OS, and what you set up."
+---
+
+Gooclaim OS does not ask you to call an API of ours. **It reads your data where it already
+is.** Your IT team sets up one or more of these:
+
+| What | How Gooclaim OS gets it | Page |
+|------|-------------------------|------|
+| **Claims, live** | Asks your claims system's API for one claim, by its number, when a member asks | [Your claims API](/integration/claims-api) |
+| **Claims, members and claim documents, as files** | Picks up files from your SFTP server every hour, or you upload them in Portal | [Files and SFTP](/integration/files) |
+| **Documents members send** | Accepted documents can be placed in a folder on your SFTP server | [Documents back to you](/integration/documents) |
+| **Email and WhatsApp** | Set up in Portal | [Channels](/portal/channels) |
+| **Alerts for your team** | Microsoft Teams, Slack or email, set up in Portal | [Channels](/portal/channels#alerts-for-your-team) |
+
+## Principles
+
+- **Read-only.** Gooclaim OS never writes to your claims system. The only thing it ever
+  writes to your systems is a document a member sent, into an SFTP folder you choose.
+- **Your names stay yours.** Your field names and codes do not have to change. The Gooclaim
+  team builds a one-time **field mapping** from a sample of your data, and it is tested
+  before it is used.
+- **Nothing is guessed.** A record that does not fit the mapping — an unknown status code,
+  a missing required field, a date or amount that cannot be read — is stopped and reported,
+  never filled in.
+- **Credentials are protected.** Keys and passwords you give us are stored encrypted and
+  are never written to logs.

@@ -1,0 +1,70 @@
+---
+title: "Your claims API"
+description: "What Gooclaim OS asks your claims system for, how it signs in, and what the answer must contain."
+---
+
+When a member asks about a claim, Gooclaim OS asks your claims system's API for that one
+claim.
+
+## The request
+
+```http
+GET {your base address}/claims/{claim number}
+X-API-Key: {the API key you gave us}
+```
+
+- The claim number is placed in the path as it is.
+- Sign-in is by **API key**, sent in the `X-API-Key` header. Other sign-in methods are not
+  supported yet.
+- Use an `https://` address. Certificates are checked as normal.
+- Redirects are not followed.
+
+## The answer
+
+| Your API answers | Gooclaim OS treats it as |
+|------------------|--------------------------|
+| `200` with a JSON object | The claim |
+| `404` | No such claim — the member is told it was not found |
+| Anything else, or no answer within 10 seconds | Your system is unavailable |
+
+## When your system is unavailable
+
+- There is no immediate retry. If you also share a claims file over SFTP, Gooclaim OS reads
+  the claim from there instead.
+- After 5 failures in a row, Gooclaim OS pauses calls to your API for 60 seconds, then tries
+  again.
+- A claim it has just read is kept for 5 minutes, so repeated questions do not call your
+  API each time. A "not found" is never kept.
+
+## What the answer must contain
+
+Your JSON can use your own field names and nesting; the field mapping translates them. What
+Gooclaim OS needs to find in it:
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Claim number | Yes | |
+| Status | Yes | Mapped to one of: APPROVED, REJECTED, PENDING, UNDER_REVIEW, NOT_FOUND |
+| Claim type | No | CASHLESS_PREAUTH, CASHLESS_DISCHARGE or REIMBURSEMENT |
+| Policy number, hospital | No | |
+| Amounts claimed and approved | No | In rupees (commas allowed) or paise |
+| Admission and discharge dates | No | |
+| Submitted, received, decided and last-updated times | No | |
+| Rejection reason and query reason | No | A code and/or text |
+| Documents | No | A list; each with a document type and a state: REQUIRED, RECEIVED, VERIFIED or REJECTED |
+
+- Dates are read as `DD/MM/YYYY` or `YYYY-MM-DD` by default; other formats can be set in the
+  mapping.
+- Times are read as ISO 8601. A time without a timezone is taken in your timezone (India
+  time unless set otherwise).
+- Document types are matched to Gooclaim's catalogue (see
+  [document types](/integration/files#document-types)); any other name is kept as your own.
+- A value the mapping does not know is never guessed: the claim is not used, and the stop is
+  recorded for the Gooclaim team to fix the mapping.
+
+## A claims file instead of an API
+
+If your claims sit in a file on your SFTP server rather than behind an API, Gooclaim OS can
+read the claim from that file (CSV, UTF-8, with a header row), matching the claim number
+exactly. The mapping then needs the claim number, status, submitted time and last-updated
+time.

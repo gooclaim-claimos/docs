@@ -45,6 +45,15 @@
               "orion/claim-room",
               "orion/coworker"
             ]
+          },
+          {
+            "group": "Integration guide",
+            "pages": [
+              "integration/overview",
+              "integration/claims-api",
+              "integration/files",
+              "integration/documents"
+            ]
           }
         ]
       }
