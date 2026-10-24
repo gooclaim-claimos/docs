@@ -1,20 +1,22 @@
 ---
 title: "Files and SFTP"
-description: "Sending member, claim and claim-document files: SFTP folders, pickup rules, file format, validation and the fields each file needs."
+description: "Sending member, claim, claim-document and deduction files: SFTP folders, pickup rules, file format, validation and the fields each file needs."
 ---
 
-Send three kinds of file — **members**, **claims** and **claim documents** — by SFTP, or
-upload them in Portal under **Data & Connectors → Connectors → Batch Dump**.
+Send three kinds of file — **members**, **claims** and **claim documents** — and, if your
+system records them, a fourth: **claim deductions**. Send them by SFTP, or upload them in
+Portal under **Data & Connectors → Connectors → Batch Dump**.
 
 ## On your SFTP server
 
-Gooclaim OS looks in three folders under the base path you give us:
+Gooclaim OS looks in these folders under the base path you give us:
 
 ```text
 {base path}/
 ├── members/
 ├── claims/
-└── claim_documents/
+├── claim_documents/
+└── claim_deductions/     (optional)
 ```
 
 - **Every hour**, Gooclaim OS checks each folder for files.
@@ -85,6 +87,8 @@ Processing failed.
 | Decided time | No | |
 | Rejection reason and query reason | No | A code and/or text |
 | Amounts claimed and approved | No | In rupees or paise; never negative |
+| Amount paid, date paid, payment reference | No | The reference is the UTR or cheque number. No date paid means not paid. |
+| Pre-authorisation reference, approved amount, valid-until date | No | |
 
 ## Claim documents file
 
@@ -99,6 +103,24 @@ One row per document a claim needs.
 | Your document reference | No | |
 | Received time | No | |
 | Rejection note | No | Up to 2,000 characters |
+
+## Claim deductions file
+
+Why a claim was paid less than claimed. One row per deduction. Optional: send it if your
+system records deductions.
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Claim number | Yes | The claim must already be in a claims file |
+| Reason code | Yes | Your own code, e.g. `ROOM_RENT_CAP` |
+| Reason wording | No | Shown to the member exactly as you wrote it |
+| Amount | No | In rupees or paise; never negative |
+| Last changed | Yes | |
+
+- A claim's rows **replace** its earlier deductions as a whole: send every deduction for a
+  claim together, in one file. A deduction you drop is no longer shown.
+- If no deductions were ever sent for a claim, a member who asks why they were paid less is
+  told a person will check — never a reason Gooclaim OS made up.
 
 ### Document types
 

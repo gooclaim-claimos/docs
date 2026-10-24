@@ -29,10 +29,10 @@ health and its last successful fetch.
 
 **Add CMS Connector** walks you through three steps:
 
-1. **Connect.** Choose the connector type and enter your claims system's address and its
-   **API key** — today Gooclaim OS signs in to a claims API with an API key only (see
-   [Your claims API](/integration/claims-api)). For an SFTP server, press **Test
-   connection**, check the server's fingerprint, and **Approve this server** before
+1. **Connect.** Choose the connector type, enter your claims system's `https://` address,
+   and choose how Gooclaim OS signs in: **API key**, **Basic**, **OAuth 2.0 client
+   credentials** or **Mutual TLS** (see [Your claims API](/integration/claims-api#signing-in)).
+   For an SFTP server, press **Test connection**, check the server's fingerprint, and **Approve this server** before
    anything is read. If the server's identity later changes, nothing is read until you
    approve the new one.
 2. **Sample data.** Upload or paste a sample of your records (CSV or JSON).
@@ -58,7 +58,8 @@ Send member and claim files by SFTP, or upload them by hand.
 
 - **By SFTP:** after setup, Gooclaim checks your server for new files every hour. See
   [Files and SFTP](/integration/files) for the folders and rules.
-- **By hand:** choose the file type (**Members**, **Claims** or **Claim documents**) and a
+- **By hand:** choose the file type (**Members**, **Claims**, **Claim documents** or **Claim
+  deductions**) and a
   `.csv` or `.xlsx` file, press **Preview** to see what would be stored — nothing is saved
   yet — then **Looks right — ingest it**.
 

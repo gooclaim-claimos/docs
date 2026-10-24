@@ -1,6 +1,6 @@
 ---
 title: "Your claims API"
-description: "What Gooclaim OS asks your claims system for, how it signs in, and what the answer must contain."
+description: "What Gooclaim OS asks your claims system for, the four ways it can sign in, and what the answer must contain."
 ---
 
 When a member asks about a claim, Gooclaim OS asks your claims system's API for that one
@@ -10,14 +10,33 @@ claim.
 
 ```http
 GET {your base address}/claims/{claim number}
-X-API-Key: {the API key you gave us}
 ```
 
-- The claim number is placed in the path as it is.
-- Sign-in is by **API key**, sent in the `X-API-Key` header. Other sign-in methods are not
-  supported yet.
-- Use an `https://` address. Certificates are checked as normal.
+- The claim number is one path segment, URL-encoded: a `/` or `?` in it cannot change the
+  request.
+- Your base address must be `https://`. An `http://` address is refused. Certificates are
+  checked as normal.
 - Redirects are not followed.
+
+## Signing in
+
+You choose how Gooclaim OS signs in when you add the connector in Portal. Credentials are
+stored encrypted and are never shown again after you save them.
+
+| Method | What you give | What Gooclaim OS sends |
+|--------|---------------|------------------------|
+| **API key** | The key, and optionally a header name | The key in `X-API-Key`, or in the header you name. Naming `Authorization` sends `Bearer {key}`. |
+| **Basic** | A username and password | `Authorization: Basic …` (RFC 7617) |
+| **OAuth 2.0 client credentials** | Client ID, client secret, token URL, optional scopes | First asks your token URL for a token (client ID and secret sent as HTTP Basic, as RFC 6749 requires every token endpoint to accept), then sends `Authorization: Bearer {token}`. |
+| **Mutual TLS** | A client certificate and private key (PEM), and optionally your own CA certificate | The certificate during the TLS handshake. With a CA certificate given, only that CA is trusted for your server. |
+
+- **OAuth tokens** are reused until shortly before they expire, then a new one is requested.
+  If your API answers `401`, the token is dropped and the next call asks for a new one. The
+  token URL must also be `https://`.
+- **A changed secret** takes effect on the next call; a token obtained with the old secret is
+  never reused.
+- If the credentials are incomplete or the token URL gives no token, the call fails without
+  contacting your claims API, and the failure names the field, never its value.
 
 ## The answer
 
@@ -51,8 +70,12 @@ Gooclaim OS needs to find in it:
 | Admission and discharge dates | No | |
 | Submitted, received, decided and last-updated times | No | |
 | Rejection reason and query reason | No | A code and/or text |
+| Amount paid, date paid, payment reference | No | The reference is the UTR or cheque number. No date paid means not paid. |
+| Pre-authorisation reference, approved amount, valid-until date | No | |
 | Documents | No | A list; each with a document type and a state: REQUIRED, RECEIVED, VERIFIED or REJECTED |
+| Deductions | No | A list; each with your reason code, and optionally your wording and the amount. Your wording is shown to the member as you wrote it. |
 
+- Amounts are read in rupees (commas allowed) or paise, as set in the mapping.
 - Dates are read as `DD/MM/YYYY` or `YYYY-MM-DD` by default; other formats can be set in the
   mapping.
 - Times are read as ISO 8601. A time without a timezone is taken in your timezone (India
@@ -61,6 +84,9 @@ Gooclaim OS needs to find in it:
   [document types](/integration/files#document-types)); any other name is kept as your own.
 - A value the mapping does not know is never guessed: the claim is not used, and the stop is
   recorded for the Gooclaim team to fix the mapping.
+- **No deductions list is not the same as an empty one.** If your answer carries no
+  deductions, a member who asks why they were paid less is told a person will check. An
+  empty list means nothing was deducted.
 
 ## A claims file instead of an API
 
