@@ -1,0 +1,100 @@
+---
+title: "Security and compliance"
+description: "How Gooclaim OS protects your members' data: encryption, sign-in, access, consent, AI safeguards, documents and the audit trail."
+---
+
+This page is for your security and compliance teams. It describes how the platform behaves;
+your Gooclaim contact can take you through any part of it in detail.
+
+## Your data, encrypted
+
+- **Member details** — name, date of birth, policy number, mobile number and email — are
+  stored encrypted (AES-256-GCM). A member is found by a keyed hash of their number or
+  address, so the number or address itself is never stored readable.
+- **Each organisation has its own encryption key**, protected by its own key in a cloud key
+  management service. One organisation's key cannot read another's data.
+- **The words in a claim** — a rejection or query reason, a deduction reason, a note on a
+  document — are encrypted the same way.
+- **Credentials for your systems** (API keys, passwords, certificates) are stored encrypted
+  and are never shown again after they are saved.
+
+## Connections to your systems
+
+- Gooclaim OS **reads** your claims and member data; it never writes to your claims system.
+  The only thing it writes is a document a member sent, into an SFTP folder you choose.
+- Your claims API is reached over `https://` only, signing in the way you choose: API key,
+  Basic, OAuth 2.0 client credentials or mutual TLS. See
+  [Your claims API](/integration/claims-api#signing-in).
+- Before anything is read from your SFTP server, your administrator approves the server's
+  identity. If it changes, nothing is read until the new identity is approved.
+
+## Your team's sign-in
+
+- **Two-factor sign-in** (an authenticator app) is required for anyone who administers
+  access or handles member data. Recovery codes are issued once.
+- **Single sign-on** with your own Microsoft or Google accounts, if you prefer — with the
+  option to allow single sign-on only.
+- **Sessions** end after 30 minutes without activity and after 12 hours in any case. Signing
+  someone out, or changing their role, takes effect on their next action.
+- **Passwords** are at least 12 characters and cannot repeat the last five. Repeated failed
+  attempts lock the account for a period.
+- **An address allowlist** in Portal can restrict sign-in to your office networks.
+
+## Who can see what
+
+- Access is granted by **permission**, through roles your administrator assigns. Changing
+  roles or security settings asks for a fresh two-factor code.
+- **Access reviews:** your administrator can review who has access and remove what is no
+  longer needed; a removal signs the person out at once.
+- **Gooclaim support** sees nothing in your organisation until your Tenant Admin or data
+  protection officer approves a request. Access to member data needs your data protection
+  officer. Support access is read-only, time-limited and recorded.
+- **Emergency access** for the Gooclaim team needs a second Gooclaim person to approve it,
+  lasts at most four hours, and your administrators and data protection officer are emailed
+  when it starts and when it ends.
+
+## Your members
+
+- **Consent comes first.** A member is asked for consent before anything else, as the Digital
+  Personal Data Protection Act requires. A member who writes STOP withdraws their consent on
+  every channel.
+- **Identity before private details.** On channels where a member is not already recognised
+  by the mobile number on your records, they enter a one-time code before claim details are
+  shared.
+- **Erasure requests** are reviewed by your data protection officer, who confirms with their
+  password before anything is erased.
+- **Retention:** a member's record is removed 90 days after their cover ends (kept while a
+  claim is still open). Claim documents are kept for at least 10 years, longer if you choose,
+  and a legal hold stops all removal. The audit trail is kept for 10 years.
+
+## AI, with safeguards
+
+- **Members only receive approved message templates.** A model chooses which template and
+  which values from your records; it never writes free text to a member. Each template is
+  approved by a second person before it can be sent.
+- **Every message is checked before it is sent.** Each value in it — a status, an amount, a
+  date, a reason — is compared with your claim record, and the message is stopped if any
+  value does not match. A check for personal information runs on every message. If the check
+  cannot run, the message is not sent.
+- **Every AI call goes through one gateway**, which records usage against your organisation.
+  AI models are provided by third-party model providers, reached only through that gateway.
+- **Orion's answers to your staff** are checked before they are shown.
+
+## Documents members send
+
+- Members send documents only through a secure upload link.
+- A file's type is decided from its contents, not its name; PDF, JPEG, PNG and HEIC are
+  accepted.
+- Every file is scanned for malware. A file with no scan result is never treated as clean.
+
+## The audit trail
+
+- Every automated decision is recorded: what was decided, by which workflow, and when.
+- Each organisation's records are chained with a cryptographic hash, so a changed or removed
+  record can be detected, and the records cannot be edited in place.
+- Your compliance team can search the trail and export it as CSV or JSON in Portal.
+
+## Separation between organisations
+
+Which organisation a request belongs to is taken from the verified sign-in, never from the
+request itself. A request naming another organisation is refused and recorded.

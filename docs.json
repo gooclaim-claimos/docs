@@ -54,6 +54,12 @@
               "integration/files",
               "integration/documents"
             ]
+          },
+          {
+            "group": "Security",
+            "pages": [
+              "security"
+            ]
           }
         ]
       }
